@@ -24,7 +24,7 @@ class CustomersController extends BaseController {
       
       $sql->execute();
       
-      $result = $sql->fetchAll();
+      $result = $sql->fetch();
       $payload = json_encode($result);
       
       $response->getBody()->write($payload);
