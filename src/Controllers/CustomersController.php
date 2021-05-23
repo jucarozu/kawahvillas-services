@@ -59,7 +59,7 @@ class CustomersController extends BaseController {
 
       $sql = "
         INSERT INTO as_customers 
-        SET wp_user_id=:wp_user_id, 
+        SET wp_user_id = :wp_user_id, 
             wp_user_country = :wp_user_country, 
             wp_user_phone = :wp_user_phone, 
             stripe_customer_id = :stripe_customer_id;
