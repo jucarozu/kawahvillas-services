@@ -12,32 +12,35 @@ class CustomersController extends BaseController {
     
     try {
 
-      $user_id = $request->getQueryParams()['user_id'];
+      $queryParams = $request->getQueryParams();
+
+      $customerFilters = [
+        'wp_user_id' => array_key_exists('wp_user_id', $queryParams) ? $queryParams['wp_user_id'] : 'wp_user_id'
+      ];
 
       $pdo = $this->container->get('db');
       
       $sql = $pdo->prepare("
         SELECT as_customer_id, wp_user_id, wp_user_country, wp_user_phone, wp_user_status, stripe_customer_id, stripe_product_id, stripe_subscription_id, stripe_subscription_status 
         FROM as_customers 
-        WHERE wp_user_id = $user_id
+        WHERE 1 = 1 
+        AND wp_user_id = " . $customerFilters['wp_user_id'] . " 
       ");
       
       $sql->execute();
       
-      $result = $sql->fetch();
-      $payload = json_encode($result);
+      $result = $sql->fetchAll()[0];
+      $payload = json_encode($result, JSON_NUMERIC_CHECK);
       
       $response->getBody()->write($payload);
       $response->withHeader('Content-Type', 'application/json');
       $response->withStatus(200);
-      
       return $response;
 
     } catch (\Exception $e) {
 
       $response->getBody()->write('Error: ' . $e->getMessage());
       $response->withStatus(500);
-      
       return $response;
 
     }
