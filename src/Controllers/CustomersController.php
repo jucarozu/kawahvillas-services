@@ -22,6 +22,7 @@ class CustomersController extends BaseController {
 
         $response->getBody()->write("You must specify the user ID");
         $response->withStatus(401);
+        
         return $response;
 
       }
@@ -43,12 +44,14 @@ class CustomersController extends BaseController {
       $response->getBody()->write($payload);
       $response->withHeader('Content-Type', 'application/json');
       $response->withStatus(200);
+      
       return $response;
 
     } catch (\Exception $e) {
 
       $response->getBody()->write('Error: ' . $e->getMessage());
       $response->withStatus(500);
+      
       return $response;
 
     }
