@@ -81,7 +81,7 @@ class InvoiceEventsController extends StripeController {
 
     } catch (\Exception $e) {
 
-      $response->getBody()->write('Error');
+      $response->getBody()->write('Error: ' . $e->getMessage());
       $response->withStatus(500);
       
       return $response;

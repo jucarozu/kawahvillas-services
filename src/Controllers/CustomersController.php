@@ -12,12 +12,12 @@ class CustomersController extends BaseController {
     
     try {
 
-      $user_id = $request->getQueryParams()['userId'];
+      $user_id = $request->getQueryParams()['user_id'];
 
       $pdo = $this->container->get('db');
       
       $sql = $pdo->prepare("
-        SELECT wp_user_id, stripe_customer_id, stripe_product_id, stripe_subscription_id, stripe_subscription_status 
+        SELECT as_customer_id, wp_user_id, wp_user_country, wp_user_phone, wp_user_status, stripe_customer_id, stripe_product_id, stripe_subscription_id, stripe_subscription_status 
         FROM as_customers 
         WHERE wp_user_id = $user_id
       ");
@@ -78,7 +78,7 @@ class CustomersController extends BaseController {
 
     } catch (\Exception $e) {
 
-      $response->getBody()->write('Error');
+      $response->getBody()->write('Error: ' . $e->getMessage());
       $response->withStatus(500);
       
       return $response;
