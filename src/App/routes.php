@@ -4,8 +4,8 @@ use Slim\Routing\RouteCollectorProxy;
 
 $app->group('/customers', function(RouteCollectorProxy $group) {
   
-  $group->get('', 'App\Controllers\CustomersController:get');
-  $group->post('', 'App\Controllers\CustomersController:post');
+  $group->get('/user', 'App\Controllers\CustomersController:getByUserId');
+  $group->post('/user', 'App\Controllers\CustomersController:post');
 
 });
 

@@ -8,15 +8,23 @@ use App\Controllers\BaseController;
 
 class CustomersController extends BaseController {
   
-  public function get(Request $request, Response $response, $args) {
+  public function getByUserId(Request $request, Response $response, $args) {
     
     try {
 
       $queryParams = $request->getQueryParams();
 
-      $customerFilters = [
-        'wp_user_id' => array_key_exists('wp_user_id', $queryParams) ? $queryParams['wp_user_id'] : 'wp_user_id'
-      ];
+      if (array_key_exists('wp_user_id', $queryParams)) {
+
+        $wp_user_id = $queryParams['wp_user_id'];
+
+      } else {
+
+        $response->getBody()->write("You must specify the user ID");
+        $response->withStatus(401);
+        return $response;
+
+      }
 
       $pdo = $this->container->get('db');
       
@@ -24,7 +32,7 @@ class CustomersController extends BaseController {
         SELECT as_customer_id, wp_user_id, wp_user_country, wp_user_phone, wp_user_status, stripe_customer_id, stripe_product_id, stripe_subscription_id, stripe_subscription_status 
         FROM as_customers 
         WHERE 1 = 1 
-        AND wp_user_id = " . $customerFilters['wp_user_id'] . " 
+        AND wp_user_id = $wp_user_id 
       ");
       
       $sql->execute();

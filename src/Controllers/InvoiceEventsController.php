@@ -4,13 +4,17 @@ namespace App\Controllers;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use App\Controllers\StripeController;
+use App\Controllers\BaseController;
+use \Stripe\Stripe;
 
-class InvoiceEventsController extends StripeController {
+class InvoiceEventsController extends BaseController {
 
   public function post(Request $request, Response $response, $args) {
     
     try {
+
+      // Set Stripe secret key
+      Stripe::setApiKey('sk_test_51IoL75HR21ubejJfMmkGCQL7CZ7bokI0o929oMcqGLsCfZaMmGMf31qPeNtizW93ECyq1pEPy0ntKgld91qaXaIh00tIRIn4V2');
 
       $event = $request->getParsedBody();
       $type = $event['type'];
@@ -43,7 +47,7 @@ class InvoiceEventsController extends StripeController {
         case 'invoice.paid':
 
           $customer_id = $object['customer'];
-          $product_id = $object['lines']['data']['price']['product'];
+          $product_id = $object['lines']['data'][0]['price']['product'];
           $subscription_id = $object['subscription'];
 
           $subscription = \Stripe\Subscription::retrieve(
@@ -62,9 +66,9 @@ class InvoiceEventsController extends StripeController {
 
           $sql = "
             UPDATE as_customers 
-            SET stripe_product_id = :stripe_product_id
+            SET stripe_product_id = :stripe_product_id,
                 stripe_subscription_id = :stripe_subscription_id,
-                stripe_subscription_status = :stripe_subscription_status,
+                stripe_subscription_status = :stripe_subscription_status
             WHERE stripe_customer_id = :stripe_customer_id;
           ";
 
