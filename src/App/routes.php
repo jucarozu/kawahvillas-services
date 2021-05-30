@@ -9,6 +9,13 @@ $app->group('/customers', function(RouteCollectorProxy $group) {
 
 });
 
+$app->group('/booking', function(RouteCollectorProxy $group) {
+  
+  $group->get('/requests', 'App\Controllers\BookingRequestsController:get');
+  $group->post('/requests', 'App\Controllers\BookingRequestsController:post');
+
+});
+
 $app->group('/stripe', function(RouteCollectorProxy $group) {
 
   $group->post('/invoiceEvents', 'App\Controllers\InvoiceEventsController:post');
