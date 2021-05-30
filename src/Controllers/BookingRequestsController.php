@@ -22,7 +22,7 @@ class BookingRequestsController extends BaseController {
       
       $sql->execute();
       
-      $result = $sql->fetchAll()[0];
+      $result = $sql->fetchAll();
       $payload = json_encode($result, JSON_NUMERIC_CHECK);
       
       $response->getBody()->write($payload);
